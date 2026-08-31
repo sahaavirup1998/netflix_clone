@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import herobg from "../assets/herobg2.jpg"
 import { Bookmark, Play } from 'lucide-react';
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   const [movies, setMovies] = useState(null);
