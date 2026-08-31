@@ -5,6 +5,7 @@ import { Play, Slice } from 'lucide-react';
 const Moviepage = () => {
     const [movie, setMovie] = useState(null);
     const [recommendations, setRecommendations] = useState([]);
+    const [trailerKey, setTrailerKey] = useState(null);
     const id = useParams();
 
     const options = {
@@ -17,7 +18,7 @@ const Moviepage = () => {
     };
 
     useEffect(() => {
-        fetch(`https://api.themoviedb.org/3/movie/${id.id}?language=en-US`, options)
+      fetch(`https://api.themoviedb.org/3/movie/${id.id}?language=en-US`, options)
       .then((res) => res.json())
       .then((res) => setMovie(res))
       .catch((err) => console.error(err));
@@ -25,6 +26,14 @@ const Moviepage = () => {
       fetch(`https://api.themoviedb.org/3/movie/${id.id}/recommendations?language=en-US&page=1`, options)
         .then((res) => res.json())
         .then((res) => setRecommendations(res.results || []))
+        .catch((err) => console.error(err));
+
+      fetch(`https://api.themoviedb.org/3/movie/${id.id}/videos?language=en-US`, options,)
+        .then((res) => res.json())
+        .then((res) => {
+          const trailer = res.results.find((video) =>video.site === "YouTube" && video.type === "Trailer");
+          setTrailerKey(trailer.key || null);
+        })
         .catch((err) => console.error(err));
     }, [id])
 
@@ -71,10 +80,12 @@ const Moviepage = () => {
               ))}
             </div>
             <p className="text-gray-200 max-w-2xl">{movie.overview}</p>
-            <button className="flex justify-center item-center bg-[#e50914] text-white py-3 px-4 rounded-full cursor-pointer text-sm md:text-base mt-2 md:mt-4">
-              <Play className="mr-2" />
-              Watch now
-            </button>
+            <Link to={trailerKey ? `https://www.youtube.com/watch?v=${trailerKey}` : "#"} target="_blank" rel="noopener noreferrer">
+              <button className="flex justify-center item-center bg-[#e50914] text-white py-3 px-4 rounded-full cursor-pointer text-sm md:text-base mt-2 md:mt-4">
+                <Play className="mr-2" />
+                Watch now
+              </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -149,19 +160,28 @@ const Moviepage = () => {
           </div>
           <div className="flex-1">
             <h3 className="font-semibold text-white mb-2">Tagline</h3>
-            <p className="text-gray-400 italic mb-6">{movie.tagline || "No Tagline Available"}</p>
+            <p className="text-gray-400 italic mb-6">
+              {movie.tagline || "No Tagline Available"}
+            </p>
 
             <h3 className="font-semibold text-white mb-2">Overview</h3>
-            <p className="text-gray-200 italic mb-6">{movie.overview || "No overview available"}</p>
+            <p className="text-gray-200 italic mb-6">
+              {movie.overview || "No overview available"}
+            </p>
           </div>
         </div>
       </div>
       {recommendations.length > 0 && (
         <div className="p-8">
-          <h2 className="text-2xl font-semibold mb-4">You might also like...</h2>
+          <h2 className="text-2xl font-semibold mb-4">
+            You might also like...
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {recommendations.map((rec) => (
-              <div key={rec.id} className="bg-[#232323] rounded-lg p-4 shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
+              <div
+                key={rec.id}
+                className="bg-[#232323] rounded-lg p-4 shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300"
+              >
                 <Link to={`/movie/${rec.id}`}>
                   <img
                     src={`https://image.tmdb.org/t/p/original/${rec.poster_path}`}
@@ -170,7 +190,9 @@ const Moviepage = () => {
                   />
                 </Link>
                 <h3 className="font-semibold text-white mt-2">{rec.title}</h3>
-                <p className="text-gray-400 text-sm">{rec.release_date?.slice(0, 4)}</p>
+                <p className="text-gray-400 text-sm">
+                  {rec.release_date?.slice(0, 4)}
+                </p>
               </div>
             ))}
           </div>
