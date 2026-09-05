@@ -22,14 +22,24 @@ export const signin = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required" });
+    return res.status(400).json({
+      error: "Email and password are required",
+    });
   }
 
   try {
     const user = await signinUser(email, password);
+
+    // Remove password before sending response
     const { password: _, ...userData } = user.toObject();
-    res.status(200).json({ message: "User signed in successfully", user });
+
+    res.status(200).json({
+      message: "User signed in successfully",
+      user: userData,
+    });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({
+      error: error.message,
+    });
   }
 };
