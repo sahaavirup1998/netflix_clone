@@ -1,9 +1,13 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Link } from 'react-router-dom'
 
 
 const SignIn = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
+  console.log("email: ", email);
+  console.log("password: ", password);
   return (
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat px-4 md:px-8 py-5"
@@ -19,11 +23,15 @@ const SignIn = () => {
         <form className="flex flex-col item-center justify-center gap-5">
           <input
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             className="w-full h-[70px] bg-[#333333] text-white rounded px-5 text-base display: inline-block"
           />
           <input
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
             className="w-full h-[70px] bg-[#333333] text-white rounded px-5 text-base display: inline-block"
           />
