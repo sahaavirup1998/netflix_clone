@@ -18,7 +18,7 @@ const SignIn = () => {
         </h1>
         <form className="flex flex-col item-center justify-center gap-5">
           <input
-            type="text"
+            type="email"
             placeholder="Enter your email"
             className="w-full h-[70px] bg-[#333333] text-white rounded px-5 text-base display: inline-block"
           />
