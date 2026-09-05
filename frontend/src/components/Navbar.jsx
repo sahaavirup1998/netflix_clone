@@ -6,9 +6,13 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   return (
     <nav className="bg-black text-gray-200 flex justify-between items-center p-4 h-20 text-sm font-medium md:text-[15px] text-nowrap">
-    <Link to='/'>
-      <img src={logo} alt="Logo" className="w-32 brightness-125 cursor-pointer" />
-    </Link>
+      <Link to="/">
+        <img
+          src={logo}
+          alt="Logo"
+          className="w-32 brightness-125 cursor-pointer"
+        />
+      </Link>
       <ul className="hidden xl:flex space-x-6">
         <li className="cursor-pointer hover:text-[#e50914]">Home</li>
         <li className="cursor-pointer hover:text-[#e50914]">Tv Shows</li>
@@ -30,9 +34,11 @@ const Navbar = () => {
         <button className="bg-[#e50914] px-4 py-2 text-white cursor-pointer rounded-md">
           Get AI Movie Pics
         </button>
-        <button className="border border-[#333333] px-4 py-2 text-white cursor-pointer rounded-md">
-          Sign In
-        </button>
+        <Link to="/sign-in">
+          <button className="border border-[#333333] px-4 py-2 text-white cursor-pointer rounded-md">
+            Sign In
+          </button>
+        </Link>
       </div>
     </nav>
   );
