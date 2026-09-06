@@ -1,30 +1,32 @@
 import React, {useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import useAuthStore from '../store/authStore'
+import { toast } from "react-toastify";
 
 const SignIn = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [validationError, setValidationError] = useState("");
+  // const [validationError, setValidationError] = useState("");
   const navigate = useNavigate()
 
-  const { signin, isLoading, error, message } = useAuthStore()
+  const { signin, isLoading} = useAuthStore()
 
   const handleSignIn = async (e) => {
     e.preventDefault();
 
-    setValidationError("");
+    // setValidationError("");
 
     if (!email.trim() || !password.trim()) {
-      setValidationError("All fields are required");
+      toast.error("All fields are required");
       return;
     }
 
     try {
       await signin(email, password);
+      toast.success("Signed in successfully!");
       navigate("/");
     } catch (error) {
-      console.error("Sign-in error:", error.message);
+      toast.error("Sign-in error:", error.message);
     }
   };
 
@@ -56,15 +58,6 @@ const SignIn = () => {
             placeholder="Enter your password"
             className="w-full h-[70px] bg-[#333333] text-white rounded px-5 text-base display: inline-block"
           />
-
-          {validationError && (
-            <p className="text-red-500 text-sm w-full">{validationError}</p>
-          )}
-          {error && <p className="text-red-500 text-sm w-full">{error}</p>}
-          {message && (
-            <p className="text-green-500 text-sm w-full">{message}</p>
-          )}
-
           <button
             type="submit"
             disabled={isLoading}

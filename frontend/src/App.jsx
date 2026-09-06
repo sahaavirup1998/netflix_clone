@@ -5,6 +5,8 @@ import { Routes, Route } from 'react-router-dom'
 import Moviepage from './pages/Moviepage'
 import SignIn from './pages/SignIn'
 import SignUP from './pages/SignUp'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const App = () => {
@@ -17,6 +19,7 @@ const App = () => {
         <Route path={"/sign-in"} element={<SignIn />} />
         <Route path={"/signup"} element={<SignUP />} />
       </Routes>
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

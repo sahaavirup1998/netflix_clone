@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuthStore from "../store/authStore";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -8,26 +9,28 @@ const SignUp = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [validationError, setValidationError] = useState("");
+  // const [validationError, setValidationError] = useState("");
 
-  const { signup, isLoading, error, message } = useAuthStore();
+  const { signup, isLoading } = useAuthStore();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
 
-    setValidationError("");
+    // setValidationError("");
 
     if (!username.trim() || !email.trim() || !password.trim()) {
-      setValidationError("All fields are required");
+      // setValidationError("All fields are required");
+      toast.error("All fields are required");
       return;
     }
 
     try {
       await signup(username, email, password);
+      toast.success("Account created successfully!");
 
       navigate("/");
     } catch (error) {
-      console.error("Sign-up error:", error.message);
+      toast.error("Sign-up error:", error.message);
     }
   };
 
@@ -69,15 +72,6 @@ const SignUp = () => {
             placeholder="Enter your password"
             className="w-full h-[70px] bg-[#333333] text-white rounded px-5 text-base"
           />
-
-          {validationError && (
-            <p className="text-red-500 text-sm w-full">{validationError}</p>
-          )}
-          {error && <p className="text-red-500 text-sm w-full">{error}</p>}
-          {message && (
-            <p className="text-green-500 text-sm w-full">{message}</p>
-          )}
-          
           <button
             type="submit"
             disabled={isLoading}
