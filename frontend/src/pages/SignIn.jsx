@@ -1,13 +1,34 @@
 import React, {useState} from 'react'
-import { Link } from 'react-router-dom'
-
+import { Link, useNavigate } from 'react-router-dom'
+import useAuthStore from '../store/authStore'
 
 const SignIn = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [validationError, setValidationError] = useState("");
+  const navigate = useNavigate()
 
-  console.log("email: ", email);
-  console.log("password: ", password);
+  const { signin, isLoading, error, message } = useAuthStore()
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+
+    setValidationError("");
+
+    if (!email.trim() || !password.trim()) {
+      setValidationError("All fields are required");
+      return;
+    }
+
+    try {
+      await signin(email, password);
+      navigate("/");
+    } catch (error) {
+      console.error("Sign-in error:", error.message);
+    }
+  };
+
+  
   return (
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat px-4 md:px-8 py-5"
@@ -20,7 +41,7 @@ const SignIn = () => {
         <h1 className="text-3xl font-medium text-white mb-7 text-center">
           Sign In
         </h1>
-        <form className="flex flex-col item-center justify-center gap-5">
+        <form onSubmit={handleSignIn} className="flex flex-col item-center justify-center gap-5">
           <input
             type="email"
             value={email}
@@ -35,19 +56,27 @@ const SignIn = () => {
             placeholder="Enter your password"
             className="w-full h-[70px] bg-[#333333] text-white rounded px-5 text-base display: inline-block"
           />
-          <Link to={'/'}>
-            <button
-              type="submit"
-              className="w-full h-[50px] bg-[#E50914] text-white rounded px-5 text-xl font-semibold hover:opacity-90 transition duration-300 cursor-pointer"
-            >
-              Sign In
-            </button>
-          </Link>
+
+          {validationError && (
+            <p className="text-red-500 text-sm w-full">{validationError}</p>
+          )}
+          {error && <p className="text-red-500 text-sm w-full">{error}</p>}
+          {message && (
+            <p className="text-green-500 text-sm w-full">{message}</p>
+          )}
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full h-[50px] bg-[#E50914] text-white rounded px-5 text-xl font-semibold hover:opacity-90 transition duration-300 cursor-pointer"
+          >
+            {isLoading ? "Signing in..." : "Sign In"}
+          </button>
         </form>
-        <div className='text-center mt-4'>
-          <p className='text-white text-base'>
-            Don't have an account?{' '}
-            <Link to={'/signup'} className='text-blue-500 hover:underline'>
+        <div className="text-center mt-4">
+          <p className="text-white text-base">
+            Don't have an account?{" "}
+            <Link to={"/signup"} className="text-blue-500 hover:underline">
               Sign up
             </Link>
           </p>

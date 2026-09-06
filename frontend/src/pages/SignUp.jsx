@@ -1,14 +1,35 @@
-import React, {useState} from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import useAuthStore from "../store/authStore";
 
 const SignUp = () => {
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const navigate = useNavigate();
 
-  console.log("username: ", username);
-  console.log("email: ", email);
-  console.log("password: ", password);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [validationError, setValidationError] = useState("");
+
+  const { signup, isLoading, error, message } = useAuthStore();
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+
+    setValidationError("");
+
+    if (!username.trim() || !email.trim() || !password.trim()) {
+      setValidationError("All fields are required");
+      return;
+    }
+
+    try {
+      await signup(username, email, password);
+
+      navigate("/");
+    } catch (error) {
+      console.error("Sign-up error:", error.message);
+    }
+  };
 
   return (
     <div
@@ -22,41 +43,54 @@ const SignUp = () => {
         <h1 className="text-3xl font-medium text-white mb-7 text-center">
           Sign Up
         </h1>
-        <form className="flex flex-col item-center justify-center gap-5">
+
+        <form
+          onSubmit={handleSignUp}
+          className="flex flex-col items-center justify-center gap-5"
+        >
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Enter your name"
-            className="w-full h-[70px] bg-[#333333] text-white rounded px-5 text-base display: inline-block"
+            className="w-full h-[70px] bg-[#333333] text-white rounded px-5 text-base"
           />
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="abc@gmail.com"
-            className="w-full h-[70px] bg-[#333333] text-white rounded px-5 text-base display: inline-block"
+            className="w-full h-[70px] bg-[#333333] text-white rounded px-5 text-base"
           />
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
-            className="w-full h-[70px] bg-[#333333] text-white rounded px-5 text-base display: inline-block"
+            className="w-full h-[70px] bg-[#333333] text-white rounded px-5 text-base"
           />
-          <Link to={"/sign-in"}>
-            <button
-              type="submit"
-              className="w-full h-[50px] bg-[#E50914] text-white rounded px-5 text-xl font-semibold hover:opacity-90 transition duration-300 cursor-pointer"
-            >
-              Sign Up
-            </button>
-          </Link>
+
+          {validationError && (
+            <p className="text-red-500 text-sm w-full">{validationError}</p>
+          )}
+          {error && <p className="text-red-500 text-sm w-full">{error}</p>}
+          {message && (
+            <p className="text-green-500 text-sm w-full">{message}</p>
+          )}
+          
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full h-[50px] bg-[#E50914] text-white rounded px-5 text-xl font-semibold hover:opacity-90 transition duration-300 cursor-pointer disabled:opacity-50"
+          >
+            {isLoading ? "Signing up..." : "Sign Up"}
+          </button>
         </form>
+
         <div className="text-center mt-4">
           <p className="text-white text-base">
             Already have an account?{" "}
-            <Link to={"/sign-in"} className="text-blue-500 hover:underline">
+            <Link to="/sign-in" className="text-blue-500 hover:underline">
               Sign in
             </Link>
           </p>
@@ -64,6 +98,6 @@ const SignUp = () => {
       </div>
     </div>
   );
-}
+};
 
-export default SignUp
+export default SignUp;

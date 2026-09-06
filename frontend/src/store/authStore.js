@@ -1,0 +1,143 @@
+import { create } from "zustand";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
+
+const useAuthStore = create((set) => ({
+  user: null,
+  isLoading: false,
+  error: null,
+  message: null,
+  fetchingUser: true,
+
+// signup
+  signup: async (username, email, password) => {
+    set({
+      isLoading: true,
+      error: null,
+      message: null,
+    });
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/api/users/signup",
+        {
+          username,
+          email,
+          password,
+        },
+      );
+
+      const data = response.data;
+
+      set({
+        user: data.user,
+        isLoading: false,
+        message: data.message,
+      });
+
+      return data;
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to sign up";
+
+      set({
+        error: errorMessage,
+        isLoading: false,
+        message: null,
+      });
+
+      // Important!
+      // This prevents redirect on error
+      throw new Error(errorMessage);
+    }
+  },
+
+// SIGNIN
+  signin: async (email, password) => {
+    set({
+      isLoading: true,
+      error: null,
+      message: null,
+    });
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/api/users/signin",
+        {
+          email,
+          password,
+        },
+      );
+
+      const data = response.data;
+
+      set({
+        user: data.user,
+        isLoading: false,
+        message: data.message,
+      });
+
+      return data;
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to log in";
+
+      set({
+        error: errorMessage,
+        isLoading: false,
+        message: null,
+      });
+
+      throw new Error(errorMessage);
+    }
+  },
+
+// LOGOUT
+  logout: async () => {
+    set({
+      isLoading: true,
+      error: null,
+      message: null,
+    });
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/api/users/logout",
+      );
+
+      const data = response.data;
+
+      set({
+        user: null,
+        isLoading: false,
+        message: data.message,
+      });
+
+      return data;
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to log out";
+
+      set({
+        error: errorMessage,
+        isLoading: false,
+        message: null,
+      });
+
+      throw new Error(errorMessage);
+    }
+  },
+
+}));
+
+export default useAuthStore;
