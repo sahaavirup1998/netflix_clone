@@ -99,6 +99,36 @@ const useAuthStore = create((set) => ({
     }
   },
 
+  fetchUser: async () => {
+    set({
+      fetchingUser: true,
+      error: null,
+    });
+
+    try {
+      const response = await axios.get(
+        "http://localhost:5001/api/users/fetch-user",
+      );
+      const data = response.data;
+
+      set({
+        user: data.user,
+        fetchingUser: false,
+      });
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to fetch user";
+
+      set({
+        error: errorMessage,
+        fetchingUser: false,
+      });
+    }
+  },
+
 // LOGOUT
   logout: async () => {
     set({

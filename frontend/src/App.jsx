@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import Navbar from './components/Navbar'
 import Homepage from './pages/Homepage'
 import { Routes, Route } from 'react-router-dom'
@@ -7,9 +7,23 @@ import SignIn from './pages/SignIn'
 import SignUP from './pages/SignUp'
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useAuthStore from './store/authStore'
 
 
 const App = () => {
+  const {fetchUser, fetchingUser} = useAuthStore();
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
+
+  if (fetchingUser) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-white text-lg">Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Navbar />
