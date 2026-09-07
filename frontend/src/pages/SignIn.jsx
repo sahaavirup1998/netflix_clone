@@ -9,7 +9,7 @@ const SignIn = () => {
   // const [validationError, setValidationError] = useState("");
   const navigate = useNavigate()
 
-  const { signin, isLoading} = useAuthStore()
+  const { signin, isLoading, message } = useAuthStore()
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -26,7 +26,7 @@ const SignIn = () => {
       toast.success("Signed in successfully!");
       navigate("/");
     } catch (error) {
-      toast.error("Sign-in error:", error.message);
+      toast.error(error.message);
     }
   };
 
