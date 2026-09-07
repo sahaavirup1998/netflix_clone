@@ -3,6 +3,8 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
+const API_BASE_URL = "https://netflix-clone-dsji.onrender.com/api/users";
+
 const useAuthStore = create((set) => ({
   user: null,
   isLoading: false,
@@ -20,7 +22,7 @@ const useAuthStore = create((set) => ({
 
     try {
       const response = await axios.post(
-        "http://localhost:5001/api/users/signup",
+        `${API_BASE_URL}/signup`,
         {
           username,
           email,
@@ -66,7 +68,7 @@ const useAuthStore = create((set) => ({
 
     try {
       const response = await axios.post(
-        "http://localhost:5001/api/users/signin",
+        `${API_BASE_URL}/signin`,
         {
           email,
           password,
@@ -107,7 +109,7 @@ const useAuthStore = create((set) => ({
 
     try {
       const response = await axios.get(
-        "http://localhost:5001/api/users/fetch-user",
+        `${API_BASE_URL}/fetch-user`,
       );
       const data = response.data;
 
@@ -139,7 +141,7 @@ const useAuthStore = create((set) => ({
 
     try {
       const response = await axios.post(
-        "http://localhost:5001/api/users/logout",
+        `${API_BASE_URL}/logout`,
       );
 
       const data = response.data;
