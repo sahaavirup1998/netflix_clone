@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { getAiRecommendation } from "../lib/AIModel";
-import RecomendMovie from "./RecomendMovie";
 
 const AiRecommendation = () => {
   const steps = [
@@ -38,23 +37,12 @@ const AiRecommendation = () => {
     {
       name: "language",
       label: "Preferred language?",
-      options: [
-        "English",
-        "Hindi",
-        "Korean",
-        "Spanish",
-        "French",
-        "Other",
-      ],
+      options: ["English", "Hindi", "Korean", "Spanish", "French", "Other"],
     },
     {
       name: "length",
       label: "Preferred movie length?",
-      options: [
-        "Short (<90 min)",
-        "Standard (90-120 min)",
-        "Long (>120 min)",
-      ],
+      options: ["Short (<90 min)", "Standard (90-120 min)", "Long (>120 min)"],
     },
   ];
 
@@ -90,7 +78,7 @@ const AiRecommendation = () => {
       !input.length
     ) {
       toast.error(
-        "Please answer all questions before generating a recommendation!"
+        "Please answer all questions before generating a recommendation!",
       );
       return;
     }
@@ -179,7 +167,6 @@ const AiRecommendation = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#141414] flex flex-col items-center justify-start relative px-4 py-8">
-
       {/* Background Image */}
       <img
         src="/bg_banner.jpg"
@@ -189,7 +176,6 @@ const AiRecommendation = () => {
 
       {/* Form Container */}
       <div className="relative z-10 w-full max-w-md mx-auto rounded-2xl bg-[#181818] shadow-2xl border border-[#333333] px-8 py-10 flex flex-col items-center gap-4 min-h-[550px]">
-
         {/* Title */}
         <h2 className="text-3xl font-extrabold mb-8 text-center text-white tracking-tight drop-shadow-lg">
           AI Movie Recommendations
@@ -197,7 +183,6 @@ const AiRecommendation = () => {
 
         {/* Progress Bar */}
         <div className="w-full flex items-center justify-between mb-8">
-
           <div className="h-2 flex-1 bg-[#232323] rounded-full overflow-hidden">
             <div
               className="h-full bg-[#e50914] transition-all duration-300 ease-in-out"
@@ -210,21 +195,17 @@ const AiRecommendation = () => {
           <span className="text-white font-bold ml-4 text-sm">
             {step + 1}/{steps.length}
           </span>
-
         </div>
 
         {/* Question */}
         <div className="flex flex-col items-center flex-1 gap-4 w-full">
-
           <div className="flex-1 mb-6 w-full">
-
             <h3 className="text-lg font-bold text-white mb-4 text-center">
               {currentStep.label}
             </h3>
 
             {/* Options */}
             <div className="grid grid-cols-1 gap-4">
-
               {currentStep.options.map((option) => (
                 <button
                   key={option}
@@ -240,12 +221,10 @@ const AiRecommendation = () => {
                   {option}
                 </button>
               ))}
-
             </div>
 
             {/* Navigation Buttons */}
             <div className="flex justify-between items-center mt-6 w-full">
-
               {/* Back */}
               <button
                 type="button"
@@ -270,22 +249,73 @@ const AiRecommendation = () => {
                 {loading
                   ? "Generating..."
                   : step === steps.length - 1
-                  ? "Submit"
-                  : "Next"}
+                    ? "Submit"
+                    : "Next"}
               </button>
-
             </div>
-
           </div>
-
         </div>
       </div>
 
       {/* Recommendation Component */}
       {recommendation.length > 0 && (
-        <RecomendMovie recommendation={recommendation} />
-      )}
+        <div className="w-full mt-6 max-w-7xl mx-auto rounded-2xl bg-[#181818] shadow-2xl border border-[#333333] px-6 py-8">
+          {/* Heading */}
 
+          <h3 className="text-2xl font-bold text-white mb-6 text-center">
+            Recommended Movies
+          </h3>
+
+          {/* Movie Grid */}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 bg-gradient-to-b from-[#181818] via-[#232323] to-[#181818]">
+            {recommendation.map((movie, index) => (
+              <div
+                key={`${movie.title}-${index}`}
+                className="group bg-gradient-to-b from-[#181818] via-[#232323] to-[#181818] border border-[#333333] rounded-xl p-5 text-white
+
+min-h-[230px] flex flex-col
+
+transition-all duration-300
+
+hover:-translate-y-1 hover:border-[#e50914]
+
+hover:shadow-lg hover:shadow-red-900/20"
+              >
+                {/* Movie Number */}
+
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-semibold text-gray-500">
+                    #{index + 1}
+                  </span>
+
+                  <span className="text-xs px-2 py-1 rounded-full bg-[#333333] text-gray-300">
+                    {movie.year}
+                  </span>
+                </div>
+
+                {/* Movie Title */}
+
+                <h4 className="text-lg font-bold text-[#e50914] group-hover:text-red-500">
+                  {movie.title}
+                </h4>
+
+                {/* Movie Info */}
+
+                <p className="text-sm text-gray-400 mt-2">
+                  {movie.language} • {movie.genre}
+                </p>
+
+                {/* Reason */}
+
+                <p className="text-sm text-gray-300 mt-4 leading-relaxed">
+                  {movie.reason}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
