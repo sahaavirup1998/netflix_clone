@@ -148,6 +148,7 @@ const useAuthStore = create((set) => ({
         user: null,
         isLoading: false,
         message: data.message,
+        error: null,
       });
 
       return data;

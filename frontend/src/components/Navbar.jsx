@@ -1,13 +1,21 @@
 import React, {useState} from "react";
 import { Search, HelpCircle, Settings, LogOut } from "lucide-react";
 import logo from "../assets/logo.png"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuthStore from "../store/authStore";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
-  const {user} = useAuthStore();
+  const {user, logout} = useAuthStore();
+  const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const avatarUrl = user?`https://api.dicebear.com/7.x/initials/svg?seed=${user.username}`:"https://api.dicebear.com/7.x/initials/svg?seed=Guest";
+
+  const handleLogout = async () => {
+    await logout();
+    toast.success("Logged out successfully!");
+    navigate("/sign-in");
+  }
 
   return (
     <nav className="bg-black text-gray-200 flex justify-between items-center p-4 h-20 text-sm font-medium md:text-[15px] text-nowrap">
@@ -67,7 +75,7 @@ const Navbar = () => {
                   <Settings />
                   Settings
                 </button>
-                <button className="flex items-center gap-5 px-4 py-3 rounded-lg text-white bg-[#181818] hover:bg-[#1d1c1c] cursor-pointer">
+                <button onClick={handleLogout} className="flex items-center gap-5 px-4 py-3 rounded-lg text-white bg-[#181818] hover:bg-[#1d1c1c] cursor-pointer">
                   <LogOut />
                   Logout
                 </button>
