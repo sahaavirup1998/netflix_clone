@@ -8,6 +8,7 @@ import SignUP from './pages/SignUp'
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useAuthStore from './store/authStore'
+import ProtectedRoute from './components/ProtectedRoute'
 
 
 const App = () => {
@@ -28,7 +29,11 @@ const App = () => {
     <div>
       <Navbar />
       <Routes>
-        <Route path={"/"} element={<Homepage />} />
+        <Route path={"/"} element={
+          <ProtectedRoute>
+            <Homepage />
+          </ProtectedRoute>
+        } />
         <Route path={"/movie/:id"} element={<Moviepage />} />
         <Route path={"/sign-in"} element={<SignIn />} />
         <Route path={"/signup"} element={<SignUP />} />
