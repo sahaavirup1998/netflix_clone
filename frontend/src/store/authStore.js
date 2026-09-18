@@ -20,7 +20,7 @@ const useAuthStore = create((set) => ({
 
     try {
       const response = await axios.post(
-        "http://localhost:5001/api/users/signup",
+        "https://netflix-clone-2-lswy.onrender.com/api/users/signup",
         {
           username,
           email,
@@ -66,7 +66,7 @@ const useAuthStore = create((set) => ({
 
     try {
       const response = await axios.post(
-        "http://localhost:5001/api/users/signin",
+        "https://netflix-clone-2-lswy.onrender.com/api/users/signin",
         {
           email,
           password,
@@ -107,7 +107,7 @@ const useAuthStore = create((set) => ({
 
     try {
       const response = await axios.get(
-        "http://localhost:5001/api/users/fetch-user",
+        "https://netflix-clone-2-lswy.onrender.com/api/users/fetch-user",
       );
       const data = response.data;
 
@@ -139,7 +139,7 @@ const useAuthStore = create((set) => ({
 
     try {
       const response = await axios.post(
-        "http://localhost:5001/api/users/logout",
+        "https://netflix-clone-2-lswy.onrender.com/api/users/logout",
       );
 
       const data = response.data;
